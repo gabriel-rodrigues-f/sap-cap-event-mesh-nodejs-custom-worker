@@ -4,7 +4,7 @@ const env = {
   BROKER: {
     MESSAGING: {
       HOST: process.env.HOST,
-      PORT: process.env.PORT,
+      PORT: "443",
       PATH: process.env.URL_PATH,
     },
     AUTH: {
