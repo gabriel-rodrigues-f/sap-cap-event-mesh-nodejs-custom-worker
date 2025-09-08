@@ -23,7 +23,9 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "start:dev": "cds watch --profile hybrid"
+    "start:dev": "cds watch --profile hybrid",
+    "build": "rm -rf mta_archives/* && mbt build",
+    "deploy": "cf deploy mta_archives/*"
   },
   "cds": {
     "requires": {

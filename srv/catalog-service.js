@@ -1,9 +1,9 @@
 const cds = require("@sap/cds");
 const { SELECT, INSERT, UPDATE, DELETE } = cds.ql;
 
-const broker = require("../adapters/EventBroker");
-const consumer = require("../adapters/Consumer");
-const producer = require("../adapters/Producer");
+const broker = require("./adapters/EventBroker");
+const consumer = require("./adapters/Consumer");
+const producer = require("./adapters/Producer");
 
 module.exports = cds.service.impl(async function () {
   await broker.connect();
