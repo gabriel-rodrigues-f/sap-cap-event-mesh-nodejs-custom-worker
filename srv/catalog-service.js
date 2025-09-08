@@ -5,10 +5,17 @@ const producer = require("../adapters/Producer");
 
 module.exports = async function () {
     await broker.connect();
-    await consumer.consume({
-        queue: "queue:em/bemol/sap/cap/mock/account",
-        handler: async ({ text }) => {
-            console.log(text);
-        }
-    });
+
+    //  Exemplo para produzir mensagens no broker
+
+    // await consumer.consume({
+    //     queue: "queue:em/bemol/sap/cap/mock/account",
+    //     handler: async ({ text }) => {
+    //         console.log(text);
+    //     }
+    // });
+
+    //  Exemplo para consumir mensagens no broker
+
+    // producer.produce({ topic: "topic:topic/name", payload: { "id": 3 } })
 };
