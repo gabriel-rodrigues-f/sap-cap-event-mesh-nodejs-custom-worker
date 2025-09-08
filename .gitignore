@@ -32,4 +32,4 @@ mta_archives/
 
 # @cap-js/cds-typer
 @cds-models
-env
+.env

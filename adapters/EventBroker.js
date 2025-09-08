@@ -83,6 +83,8 @@ class EventBroker {
 
         stream
             .on('data', async (message) => {
+                const { source } = message;
+                console.log((source.properties))
                 try {
                     const buf = message?.payload;
                     const text = this._safeToString(buf);

@@ -1,0 +1,45 @@
+@server = http://localhost:4004
+
+### Listar Orders
+# @name Orders_GET
+GET {{server}}/odata/v4/catalog/Orders
+Accept: application/json
+
+### Criar Order
+# @name Orders_POST
+POST {{server}}/odata/v4/catalog/Orders
+Content-Type: application/json
+Accept: application/json
+
+{
+  "CompanyCode": "5801",
+  "Supplier": "r-11215801",
+  "Currency": "801",
+  "NetAmount": 5085292.26,
+  "CreatedAtS4": "2017-07-28T00:00:00.000Z",
+  "Status": "Status-11215801"
+}
+
+### Atualizar Order (PATCH)
+# Substitua o caminho pelo ID correto:
+# - Numérico:  (1)
+# - UUID:      (ID=guid'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx')
+# @name Orders_PATCH
+PATCH {{server}}/odata/v4/catalog/Orders(4edeff1d-2014-48f4-9ce1-02cceb4ae687)
+Content-Type: application/json
+Accept: application/json
+
+{
+  "CompanyCode": "5801",
+  "Supplier": "r-11215801",
+  "Currency": "801",
+  "NetAmount": 5085292.26,
+  "CreatedAtS4": "2017-07-28T00:00:00.000Z",
+  "Status": "Status-11215801"
+}
+
+### Deletar Order
+# Não envie corpo no DELETE
+# @name Orders_DELETE
+DELETE {{server}}/odata/v4/catalog/Orders(4edeff1d-2014-48f4-9ce1-02cceb4ae687)
+Accept: application/json
