@@ -1,25 +1,25 @@
 const cds = require("@sap/cds");
 const { SELECT, INSERT, UPDATE, DELETE } = cds.ql;
+const { consumer, eventBroker, producer } = require("./adapters/index");
 
-const broker = require("./adapters/EventBroker");
-const consumer = require("./adapters/Consumer");
-const producer = require("./adapters/Producer");
+const domain = "em/bemol/sap/cap/poc/purchaseorder";
+//em/bemol/sap/cap/poc/purchaseorder
 
 module.exports = cds.service.impl(async function () {
-  await broker.connect();
+  await eventBroker.connect();
   const db = await cds.connect.to("db");
   const { Orders } = this.entities;
 
   try {
     await consumer.consume({
-      queue: "queue:em/bemol/sap/cap/poc/purchaseorder",
+      queue: `queue:${domain}`,
       handler: async ({ text }) => {
         console.log("[consumer] received:", text);
       },
     });
-    console.log("[consumer] listening queue em/bemol/sap/cap/poc/purchaseorder");
+    console.log(`[consumer] listening to queue ${domain}`);
   } catch (e) {
-    console.error("[consumer] falha ao iniciar consumo:", e.message);
+    console.error("[consumer] failed to start consumption:", e.message);
   }
 
   this.on("READ", "Orders", async (req) => {
@@ -36,7 +36,7 @@ module.exports = cds.service.impl(async function () {
     const order = await tx.run(SELECT.from(Orders).where({ ID: req.data.ID }).limit(1));
 
     await producer.produce({
-      topic: "topic:em/bemol/sap/cap/poc/purchaseorder/created/v1",
+      topic: `topic:${domain}/created/v1`,
       payload: order
     });
     return order;
@@ -45,27 +45,26 @@ module.exports = cds.service.impl(async function () {
   this.on("UPDATE", "Orders", async (req) => {
     const tx = db.transaction(req);
     const { ID, ...fields } = req.data;
-    if (ID == null) req.reject(400, "Parâmetro 'ID' é obrigatório.");
+    if (ID == null) req.reject(400, "Parameter 'ID' is required.");
 
     const affected = await tx.run(UPDATE(Orders).set(fields).where({ ID }));
-    if (!affected) req.reject(404, `Order com ID=${ID} não encontrada.`);
+    if (!affected) req.reject(404, `Order with ID=${ID} not found.`);
 
     const order = await tx.run(SELECT.from(Orders).where({ ID }).limit(1));
-    await producer.produce({ topic: "topic:em/bemol/sap/cap/poc/purchaseorder/updated/v1", payload: order });
+    await producer.produce({ topic: `topic:${domain}/updated/v1`, payload: order });
     return order;
   });
 
-  // DELETE
   this.on("DELETE", "Orders", async (req) => {
     const tx = db.transaction(req);
     const { ID } = req.data;
-    if (ID == null) req.reject(400, "Parâmetro 'ID' é obrigatório.");
+    if (ID == null) req.reject(400, "Parameter 'ID' is required.");
 
     const affected = await tx.run(DELETE.from(Orders).where({ ID }));
-    if (!affected) req.reject(404, `Order com ID=${ID} não encontrada.`);
+    if (!affected) req.reject(404, `Order with ID=${ID} not found.`);
 
     await producer.produce({
-      topic: "topic:em/bemol/sap/cap/poc/purchaseorder/deleted/v1",
+      topic: `topic:${domain}/deleted/v1`,
       payload: ID
     });
     return { ID };

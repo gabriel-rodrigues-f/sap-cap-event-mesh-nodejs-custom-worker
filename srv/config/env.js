@@ -1,7 +1,7 @@
 const [service] = JSON.parse(process.env.VCAP_SERVICES)["user-provided"].filter(credential => credential.name = "custom-service:bemol-em-credentials");
 const { credentials } = service;
 
-const env = {
+module.exports = {
   BROKER: {
     MESSAGING: {
       HOST: credentials.HOST,
@@ -14,6 +14,4 @@ const env = {
       CLIENT_SECRET: credentials.CLIENT_SECRET || "",
     },
   },
-};
-
-module.exports = env;
+}

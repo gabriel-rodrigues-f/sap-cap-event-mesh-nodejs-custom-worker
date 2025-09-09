@@ -1,5 +1,6 @@
 const { Client } = require('@sap/xb-msg-amqp-v100');
-const env = require('../config/env');
+const { randomUUID }  = require("node:crypto");
+const { env } = require("../config/index");
 
 class EventBroker {
     constructor() {
@@ -77,6 +78,7 @@ class EventBroker {
                 .on('error', reject);
         });
     }
+
     async consume(queue, handler) {
         this._ensureConnected();
         const stream = this._client.receiver('rx').attach(queue);
@@ -107,6 +109,13 @@ class EventBroker {
     _ensureConnected() {
         if (!this._client || !this._connected) {
             throw new Error('Error when connecting to Event Broker');
+        }
+    }
+
+    parseToCloudEvents(payload){
+        return {
+            specVersion: "1.0",
+            id: randomUUID()
         }
     }
 
