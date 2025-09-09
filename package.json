@@ -6,11 +6,14 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@cap-js-community/odata-v2-adapter": "^1.15.4",
     "@cap-js/hana": "^2",
     "@sap/cds": "^9",
     "@sap/xb-msg-amqp-v100": "^0.9.58",
     "@sap/xssec": "^4",
-    "express": "^4"
+    "add": "^2.0.6",
+    "express": "^4",
+    "npm": "^11.6.0"
   },
   "engines": {
     "node": ">=20"
