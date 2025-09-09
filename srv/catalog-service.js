@@ -1,9 +1,9 @@
 const cds = require("@sap/cds");
+const logger = cds.log('sql');
 const { SELECT, INSERT, UPDATE, DELETE } = cds.ql;
 const { consumer, eventBroker, producer } = require("./adapters/index");
 
-const domain = "em/bemol/sap/cap/poc/purchaseorder";
-//em/bemol/sap/cap/poc/purchaseorder
+const DOMAIN = "em/bemol/sap/cap/poc/purchaseorder";
 
 module.exports = cds.service.impl(async function () {
   await eventBroker.connect();
@@ -12,22 +12,21 @@ module.exports = cds.service.impl(async function () {
 
   try {
     await consumer.consume({
-      queue: `queue:${domain}`,
+      queue: `queue:${DOMAIN}`,
       handler: async ({ text }) => {
-        console.log("[consumer] received:", text);
+        logger.info(text)
       },
     });
-    console.log(`[consumer] listening to queue ${domain}`);
+    console.log(`[consumer] listening to queue ${DOMAIN}`);
   } catch (e) {
     console.error("[consumer] failed to start consumption:", e.message);
   }
 
   this.on("READ", "Orders", async (req) => {
     const tx = db.transaction(req);
-    if (req.data?.ID !== undefined) {
-      return tx.run(SELECT.from(Orders).where({ ID: req.data.ID }).limit(1));
-    }
-    return tx.run(SELECT.from(Orders));
+    const orders = await tx.run(SELECT.from(Orders));
+    logger.info(orders);
+    return orders;
   });
 
   this.on("CREATE", "Orders", async (req) => {
@@ -35,10 +34,14 @@ module.exports = cds.service.impl(async function () {
     await tx.run(INSERT.into(Orders).entries(req.data));
     const order = await tx.run(SELECT.from(Orders).where({ ID: req.data.ID }).limit(1));
 
-    await producer.produce({
-      topic: `topic:${domain}/created/v1`,
+    const message = {
+      topic: `topic:${DOMAIN}/created/v1`,
       payload: order
-    });
+    }
+
+    await producer.produce(message);
+    logger.info(message);
+
     return order;
   });
 
@@ -51,7 +54,14 @@ module.exports = cds.service.impl(async function () {
     if (!affected) req.reject(404, `Order with ID=${ID} not found.`);
 
     const order = await tx.run(SELECT.from(Orders).where({ ID }).limit(1));
-    await producer.produce({ topic: `topic:${domain}/updated/v1`, payload: order });
+
+    const message = { 
+      topic: `topic:${DOMAIN}/updated/v1`, 
+      payload: order 
+  }
+
+    await producer.produce(message);
+    logger.info(message);
     return order;
   });
 
@@ -63,10 +73,14 @@ module.exports = cds.service.impl(async function () {
     const affected = await tx.run(DELETE.from(Orders).where({ ID }));
     if (!affected) req.reject(404, `Order with ID=${ID} not found.`);
 
-    await producer.produce({
-      topic: `topic:${domain}/deleted/v1`,
+    const message = {
+      topic: `topic:${DOMAIN}/deleted/v1`,
       payload: ID
-    });
+    };
+
+    await producer.produce(message);
+    logger.info(message);
+
     return { ID };
   });
 });
