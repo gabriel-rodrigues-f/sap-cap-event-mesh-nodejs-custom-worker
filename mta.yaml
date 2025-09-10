@@ -28,7 +28,7 @@ modules:
     requires:
       - name: ms-purchase-order-auth
       - name: ms-purchase-order-db
-      - name: bemol-em-credentials
+      - name: ms-purchase-order-em-credentials
 
   - name: ms-purchase-order-db-deployer
     type: hdb
@@ -53,7 +53,7 @@ resources:
     parameters:
       service: hana
       service-plan: hdi-shared
-  - name: bemol-em-credentials
+  - name: ms-purchase-order-em-credentials
     type: org.cloudfoundry.existing-service
     parameters:
-      service-name: bemol-em-credentials
+      service-name: ms-purchase-order-em-credentials

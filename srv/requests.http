@@ -25,7 +25,7 @@ Accept: application/json
 # - Numérico:  (1)
 # - UUID:      (ID=guid'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx')
 # @name Orders_PATCH
-PATCH {{server}}/odata/v4/catalog/Orders(4edeff1d-2014-48f4-9ce1-02cceb4ae687)
+PATCH {{server}}/odata/v4/catalog/Orders(c15b535f-3751-4e5f-962d-fb8bce1f5eaa)
 Content-Type: application/json
 Accept: application/json
 
@@ -41,5 +41,5 @@ Accept: application/json
 ### Deletar Order
 # Não envie corpo no DELETE
 # @name Orders_DELETE
-DELETE {{server}}/odata/v4/catalog/Orders(4edeff1d-2014-48f4-9ce1-02cceb4ae687)
+DELETE {{server}}/odata/v4/catalog/Orders(c15b535f-3751-4e5f-962d-fb8bce1f5eaa)
 Accept: application/json

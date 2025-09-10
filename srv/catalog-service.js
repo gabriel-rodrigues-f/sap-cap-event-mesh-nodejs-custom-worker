@@ -3,24 +3,24 @@ const logger = cds.log('sql');
 const { SELECT, INSERT, UPDATE, DELETE } = cds.ql;
 const { consumer, eventBroker, producer } = require("./adapters/index");
 
-const DOMAIN = "em/bemol/sap/cap/poc/purchaseorder";
+const DOMAIN = "em/lab2dev/sap/cap/purchaseorder";
 
 module.exports = cds.service.impl(async function () {
   await eventBroker.connect();
   const db = await cds.connect.to("db");
   const { Orders } = this.entities;
 
-  try {
-    await consumer.consume({
-      queue: `queue:${DOMAIN}`,
-      handler: async ({ text }) => {
-        logger.info(text)
-      },
-    });
-    console.log(`[consumer] listening to queue ${DOMAIN}`);
-  } catch (e) {
-    console.error("[consumer] failed to start consumption:", e.message);
-  }
+  // try {
+  //   await consumer.consume({
+  //     queue: `queue:${DOMAIN}`,
+  //     handler: async ({ text }) => {
+  //       logger.info(text)
+  //     },
+  //   });
+  //   console.log(`[consumer] listening to queue ${DOMAIN}`);
+  // } catch (e) {
+  //   console.error("[consumer] failed to start consumption:", e.message);
+  // }
 
   this.on("READ", "Orders", async (req) => {
     const tx = db.transaction(req);
