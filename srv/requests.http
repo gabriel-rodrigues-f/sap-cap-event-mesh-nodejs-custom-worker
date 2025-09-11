@@ -12,12 +12,11 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "CompanyCode": "5801",
-  "Supplier": "r-11215801",
-  "Currency": "801",
+  "CompanyCode": "1000",
+  "Supplier": "SUPPLIER_A",
+  "Currency": "USD",
   "NetAmount": 5085292.26,
-  "CreatedAtS4": "2017-07-28T00:00:00.000Z",
-  "Status": "Status-11215801"
+  "Status": "OPEN"
 }
 
 ### Atualizar Order (PATCH)
@@ -30,16 +29,15 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "CompanyCode": "5801",
-  "Supplier": "r-11215801",
-  "Currency": "801",
+  "CompanyCode": "1000",
+  "Supplier": "SUPPLIER_A",
+  "Currency": "USD",
   "NetAmount": 5085292.26,
-  "CreatedAtS4": "2017-07-28T00:00:00.000Z",
-  "Status": "Status-11215801"
+  "Status": "OPEN"
 }
 
 ### Deletar Order
 # Não envie corpo no DELETE
 # @name Orders_DELETE
-DELETE {{server}}/odata/v4/catalog/Orders(c15b535f-3751-4e5f-962d-fb8bce1f5eaa)
+DELETE {{server}}/odata/v4/catalog/Orders(cb938469-c90e-46d1-bdd1-3e80f190bd41)
 Accept: application/json

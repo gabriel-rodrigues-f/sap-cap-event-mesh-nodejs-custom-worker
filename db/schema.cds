@@ -1,12 +1,14 @@
-using { cuid, managed } from '@sap/cds/common';
+using {
+        cuid,
+        managed
+} from '@sap/cds/common';
 
 namespace sample.poc;
 
-entity Orders : cuid, managed {
+entity Orders : cuid {
         CompanyCode : String(4);
         Supplier    : String(10);
         Currency    : String(3);
         NetAmount   : Decimal(13, 2);
-        CreatedAtS4 : Timestamp;
         Status      : String(20);
 }
